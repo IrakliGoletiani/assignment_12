@@ -1,21 +1,23 @@
 package com.example.homework10
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework10.databinding.FragmentMainBinding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainFragment : Fragment() {
 
     lateinit var binding: FragmentMainBinding
 
-    val countriesList = mutableListOf<Countries>()
+    private val countriesList = mutableListOf<Countries>()
 
     lateinit var countriesAdapter: CountriesAdapter
 
@@ -26,7 +28,6 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(layoutInflater)
 
         initAdapter()
-
 
         CoroutineScope(Dispatchers.IO).launch {
             countries()
@@ -40,11 +41,14 @@ class MainFragment : Fragment() {
     }
 
     private suspend fun countries() {
-        val result = RetrofitService.retrofitService().getCountry()
+        try {
+            val result = RetrofitService.retrofitService().getCountry()
 
-        if (result.isSuccessful) {
-            countriesList.addAll(result.body()!!)
-
+            if (result.isSuccessful) {
+                countriesList.addAll(result.body()!!)
+            }
+        } catch (e: Exception) {
+            d("mainlog", "$e")
         }
     }
 

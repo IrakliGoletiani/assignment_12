@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".MainFragment">
 
-
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/rvJson"
        android:layout_width="match_parent"
